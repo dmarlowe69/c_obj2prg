@@ -13,6 +13,6 @@ C_obj2prgcr is for files that have lines terminated with just a CR (CBM SEQ file
 Limitations:
 
 The OBJ file must contain contiguous memory locations. The next version will include
-non-contiguos memory by adding padding the PRG file as is done with my native C64
+non-contiguos memory by adding padding to the PRG file as is implemented with my native C64
 application obj2prgnon posted in another repo.
 
