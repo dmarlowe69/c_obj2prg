@@ -2,7 +2,7 @@
 C application to convert a commodore interface OBJ file to a PRG file. 
 Works with the output of cbm6502asm cross assembler or the native
 Commodore Macro Development System (MADS) and all its variants including
-the orgianl PET Assembler and the C128 development package.
+the orginal PET Assembler and the C128 development package.
 
 There are two verisons:
 
