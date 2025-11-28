@@ -1,21 +1,22 @@
-// ihex2prg.c
+// obj2prgcr.c
 // Compile with MinGW-w64:
-//   gcc -obj2prg.c -o obj2prg.exe
+//   gcc -obj2prgcr.c -o obj2prgcr.exe
 //   or
 //   x86_64-w64-mingw32-gcc -O2 obj2prgcr.c -o obj2prgcr.exe
 //
-// Usage: ihex2prg input.hex output.prg
-//        ihex2prg input.hex          (outputs input.prg)
+// Usage: obj2prgcr input.obj  output.prg
+//        obj2prgcr input.obj (outputs input.prg)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 
-int readbytebybyte();
+int readbytebybyte(FILE *file);
 unsigned char memory[65536];
+unsigned char pad = 0xaa;
+
 char line[512];
-FILE *f;
 uint16_t load_address = 0;
 size_t max_addr = 0;
 
@@ -64,13 +65,18 @@ int main(int argc, char *argv[]) {
          (strcat(strdup(in_name), ".prg"), strrchr(in_name, '.')-in_name+in_name) : 
          strcat(strdup(in_name), ".prg"));
 
-    f = fopen(in_name, "rb");
+    FILE *f = fopen(in_name, "rb");
     if (!f) {
         perror("Cannot open input file");
         return 1;
     }
-
-    while (readbytebybyte()==0) {
+	
+    for(unsigned int j=0; j <= 8192; j++)
+	{
+		memory[j] = pad;
+	}
+	
+    while (readbytebybyte(f)==0) {
         parse_hex_line(); 
     }
     fclose(f);
@@ -102,7 +108,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-int readbytebybyte()
+int readbytebybyte(FILE *f)
 {
     int index = 0;
     int ch;

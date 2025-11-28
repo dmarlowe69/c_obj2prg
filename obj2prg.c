@@ -1,11 +1,11 @@
-// ihex2prg.c
+// obj2prg.c
 // Compile with MinGW-w64:
 //   gcc -obj2prg.c -o obj2prg.exe
 //   or
 //   x86_64-w64-mingw32-gcc -O2 obj2prg.c -o obj2prg.exe
 //
-// Usage: ihex2prg input.hex output.prg
-//        ihex2prg input.hex          (outputs input.prg)
+// Usage: obj2prg input.obj  output.prg
+//        obj2prg input.obj (outputs input.prg)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,13 +13,16 @@
 #include <stdint.h>
 
 unsigned char memory[65536];
+unsigned char pad = 0xaa;
 uint16_t load_address = 0;
 size_t max_addr = 0;
 
 int parse_hex_line(const char *line) {
 	printf("\n%s\n",line);
-    if (line[0] != ';') return 0;  // not a cbm interface record
-
+    if (line[0] != ';') {
+		printf("\nNot a CBM Interface file\n");
+		return 0;  // not a cbm interface record
+	}
     unsigned int len, addr, checksum;
     if (sscanf(line + 1, "%2x%4x", &len, &addr) != 2)
         return 0;
@@ -65,6 +68,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    for(unsigned int j=0; j <= 8192; j++)
+	{
+		memory[j] = pad;
+	}
+	
     char line[512];
     while (fgets(line, sizeof(line), f)) {
         if (parse_hex_line(line)) break;  // EOF record
@@ -96,32 +104,4 @@ int main(int argc, char *argv[]) {
            in_name, out_name, load_address, bytes_written);
 
     return 0;
-}
-
-int readbytebybyte(FILE *file)
-{
-#define MAX_LINE_LENGTH 512
-
-    char buffer[MAX_LINE_LENGTH];
-    int index = 0;
-    int ch;
-
-    while ((ch = fgetc(file)) != EOF) {
-        if (ch == '\r') {  // Check for CR
-            buffer[index] = '\0';  // Null-terminate the string
-            printf("Read line: %s\n", buffer);
-            index = 0;  // Reset index for the next line
-        } else {
-            if (index < MAX_LINE_LENGTH - 1) {  // Prevent buffer overflow
-                buffer[index++] = ch;  // Store character
-            }
-        }
-    }
-
-    // Handle the last line if it doesn't end with CR
-    if (index > 0) {
-        buffer[index] = '\0';
-        printf("Read line: %s\n", buffer);
-    }
-	return(0);
 }
