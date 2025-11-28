@@ -9,10 +9,3 @@ There are two verisons:
 c_obj2prg is for files that have each line termainted with a CRLF (Windows text files)
 
 C_obj2prgcr is for files that have lines terminated with just a CR (CBM SEQ files)
-
-Limitations:
-
-The OBJ file must contain contiguous memory locations. The next version will include
-non-contiguos memory by adding padding to the PRG file as is implemented with my native C64
-application obj2prgnon posted in another repo.
-
