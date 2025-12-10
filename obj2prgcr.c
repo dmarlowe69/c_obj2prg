@@ -14,7 +14,7 @@
 
 int readbytebybyte(FILE *file);
 unsigned char memory[65536];
-unsigned char pad = 0xaa;
+unsigned char pad = 170; //0xaa
 
 char line[512];
 uint16_t load_address = 0;
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 	
-    for(unsigned int j=0; j <= 8192; j++)
+    for(unsigned int j=0; j < 65536; j++)
 	{
 		memory[j] = pad;
 	}

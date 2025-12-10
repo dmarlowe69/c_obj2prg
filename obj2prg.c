@@ -13,7 +13,7 @@
 #include <stdint.h>
 
 unsigned char memory[65536];
-unsigned char pad = 0xaa;
+unsigned char pad = 170; // 0xaa;
 uint16_t load_address = 0;
 size_t max_addr = 0;
 
@@ -68,11 +68,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    for(unsigned int j=0; j <= 8192; j++)
+    for(unsigned int j=0; j < 65536; j++)
 	{
 		memory[j] = pad;
 	}
-	
+
     char line[512];
     while (fgets(line, sizeof(line), f)) {
         if (parse_hex_line(line)) break;  // EOF record
